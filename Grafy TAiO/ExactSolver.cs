@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Grafy_TAiO
+{
+    internal class ExactSolver : ISolver
+    {
+        public Graph Solve(Graph G, Graph H, int k)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
