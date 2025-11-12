@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Grafy_TAiO
 {
@@ -43,36 +44,63 @@ namespace Grafy_TAiO
 
     public static class Permutator
     {
-        public static IEnumerable<int[]> GetPermutations(int n, int m)
+        public static IEnumerable<int[]> GetCombinations(int length, int setSize)
         {
-            int[] result = new int[m];
+            int[] result = new int[length];
 
-            for (int i = 0; i < m; i++)
+            for (int i = 0; i < length; i++)
                 result[i] = i;
 
             yield return result.ToArray();
 
             while (true)
             {
-                if (result[m - 1] < n - 1)
+                if (result[length - 1] < setSize - 1)
                 {
-                    result[m - 1]++;
+                    result[length - 1]++;
                     yield return result.ToArray();
                     continue;
                 }
 
-                int i = m - 2;
+                int i = length - 2;
 
-                while(i >= 0 && result[i] + 1 == result[i + 1])
+                while (i >= 0 && result[i] + 1 == result[i + 1])
                     i--;
 
                 if (i < 0)
                     yield break;
 
                 result[i]++;
-                
-                for (i++; i < m; i++)
-                    result[i] = result [i - 1] + 1;
+
+                for (i++; i < length; i++)
+                    result[i] = result[i - 1] + 1;
+
+                yield return result.ToArray();
+            }
+        }
+
+        public static IEnumerable<int[]> GetPermutations(int setSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<int[]> GetWords(int length, int alphabetSize)
+        {
+            int[] result = new int[length];
+
+            yield return result.ToArray();
+
+            while (true)
+            {
+                int i = 0;
+
+                while (i < length && result[i] == alphabetSize - 1)
+                    result[i++] = 0;
+
+                if (i == length)
+                    yield break;
+
+                result[i]++;
 
                 yield return result.ToArray();
             }
@@ -117,10 +145,19 @@ namespace Grafy_TAiO
             }
         }
 
-        public void AddEdge(int from, int to)
+        public void AddEdge(int from, int to, int amount)
         {
-            adjacencyMatrix[from, to]++;
-            outgoingEdges[from]++;
+            adjacencyMatrix[from, to]+=amount;
+            outgoingEdges[from]+=amount;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetEdge(int from, int to) => this.adjacencyMatrix[from, to];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetOutgoingEdges(int from) => this.outgoingEdges[from];
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetNumberOfVertices() => this.numberOfVertices;
     }
 }

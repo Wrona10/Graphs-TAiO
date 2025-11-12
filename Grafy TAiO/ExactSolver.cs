@@ -10,7 +10,63 @@ namespace Grafy_TAiO
     {
         public Graph Solve(Graph G, Graph H, int k)
         {
-            throw new NotImplementedException();
+            int missingVertices = 0;
+            while (Helpers.BinomialCoefficient(G.GetNumberOfVertices() + missingVertices, H.GetNumberOfVertices()) < k)
+            {
+                missingVertices++;
+            }
+
+            G = new Graph(G, G.GetNumberOfVertices() + missingVertices);
+
+            int minimalEdgeAdditions = int.MaxValue;
+            Graph minimalExtension;
+
+            int[][] subsets = Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()).ToArray();
+            int[][] permutations = Permutator.GetPermutations(H.GetNumberOfVertices()).ToArray();
+
+            foreach (var selection in Permutator.GetCombinations(k, subsets.Length))
+            {
+                foreach (int[] permutationSelection in Permutator.GetWords(k, H.GetNumberOfVertices()))
+                {
+                    Graph copy = new Graph(G);
+                    int currentEdgeAdditions = 0;
+
+                    for (int i = 0; i < k; i++)
+                    {
+                        for (int u = 0; u < H.GetNumberOfVertices(); u++)
+                        {
+                            int gu = subsets[selection[i]][permutations[permutationSelection[i]][u]];
+                            for (int v = 0; v < H.GetNumberOfVertices(); v++)
+                            {
+                                int gv = subsets[selection[i]][permutations[permutationSelection[i]][v]];
+
+                                int d = copy.GetEdge(gu, gv) - H.GetEdge(u, v);
+
+                                if(d > 0)
+                                {
+                                    copy.AddEdge(gu, gv, d);
+                                    currentEdgeAdditions += d;
+
+                                    if (currentEdgeAdditions >= minimalEdgeAdditions)
+                                        goto skip;
+                                }
+                            }
+                        }
+                    }
+
+                    if(currentEdgeAdditions < minimalEdgeAdditions)
+                    {
+                        minimalEdgeAdditions = currentEdgeAdditions;
+                        minimalExtension = copy;
+                    }
+
+                skip:;
+                }
+            }
+
+            Graph result = new Graph(0);
+
+            return result;
         }
     }
 }
