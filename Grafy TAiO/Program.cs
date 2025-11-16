@@ -41,7 +41,7 @@
 
             try
             {
-                (G, H, k) = ReadFile(args[args.Length - 1]);
+                (G, H, k) = ReadFile(source);
             }
             catch (Exception e)
             {
