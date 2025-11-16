@@ -8,7 +8,7 @@ namespace Grafy_TAiO
 {
     internal class ExactSolver : ISolver
     {
-        public Graph Solve(Graph G, Graph H, int k)
+        public (Graph, int) Solve(Graph G, Graph H, int k)
         {
             int missingVertices = 0;
             while (Helpers.BinomialCoefficient(G.GetNumberOfVertices() + missingVertices, H.GetNumberOfVertices()) < k)
@@ -19,7 +19,7 @@ namespace Grafy_TAiO
             G = new Graph(G, G.GetNumberOfVertices() + missingVertices);
 
             int minimalEdgeAdditions = int.MaxValue;
-            Graph minimalExtension;
+            Graph minimalExtension = new Graph(G);
 
             int[][] subsets = Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()).ToArray();
             int[][] permutations = Permutator.GetPermutations(H.GetNumberOfVertices()).ToArray();
@@ -42,7 +42,7 @@ namespace Grafy_TAiO
 
                                 int d = copy.GetEdge(gu, gv) - H.GetEdge(u, v);
 
-                                if(d > 0)
+                                if (d > 0)
                                 {
                                     copy.AddEdge(gu, gv, d);
                                     currentEdgeAdditions += d;
@@ -54,7 +54,7 @@ namespace Grafy_TAiO
                         }
                     }
 
-                    if(currentEdgeAdditions < minimalEdgeAdditions)
+                    if (currentEdgeAdditions < minimalEdgeAdditions)
                     {
                         minimalEdgeAdditions = currentEdgeAdditions;
                         minimalExtension = copy;
@@ -64,9 +64,7 @@ namespace Grafy_TAiO
                 }
             }
 
-            Graph result = new Graph(0);
-
-            return result;
+            return (minimalExtension, missingVertices + minimalEdgeAdditions);
         }
     }
 }
