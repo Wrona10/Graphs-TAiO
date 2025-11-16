@@ -159,5 +159,29 @@ namespace Grafy_TAiO
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetNumberOfVertices() => this.numberOfVertices;
+
+        public override string ToString()
+        {
+            if (numberOfVertices == 0)
+                return "0\n";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(numberOfVertices.ToString());
+
+            for(int i=0; i<numberOfVertices; i++)
+            {
+                StringBuilder line = new StringBuilder($"{adjacencyMatrix[i, 0]}");
+
+                for(int j=1; j<numberOfVertices; j++)
+                {
+                    line.Append($" {adjacencyMatrix[i, j]}");
+                }
+
+                sb.AppendLine(line.ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 }

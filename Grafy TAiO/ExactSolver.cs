@@ -19,7 +19,7 @@ namespace Grafy_TAiO
             G = new Graph(G, G.GetNumberOfVertices() + missingVertices);
 
             int minimalEdgeAdditions = int.MaxValue;
-            Graph minimalExtension = new Graph(G);
+            Graph minimalExtension = new Graph(0);
 
             int[][] subsets = Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()).ToArray();
             int[][] permutations = Permutator.GetPermutations(H.GetNumberOfVertices()).ToArray();
