@@ -23,7 +23,7 @@
             if(args.Length == (approximate ? 3 : 2))
                 destination = args[approximate ? 2 : 1];
 
-            if(args.Length == 3 && !approximate || !Path.Exists(source) || (destination == null || !Path.Exists(destination)))
+            if((args.Length == 3 && !approximate) || !Path.Exists(source) || (destination == null || !Path.Exists(destination)))
             {
                 Usage();
                 return;
