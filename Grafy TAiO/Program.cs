@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
 #if RELEASE
-            if(args.Length < 1 && args.Length > 3)
+            if(args.Length < 1 || args.Length > 3)
             {
                 Usage();
                 return;

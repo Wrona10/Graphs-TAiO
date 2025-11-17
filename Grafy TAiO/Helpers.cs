@@ -40,6 +40,8 @@ namespace Grafy_TAiO
 
             return numerator / denominator;
         }
+
+        // n! / k! * n-k ! -> n * n-1 * n-2 * .. * k+1 / n-k * n-k-1 * ... * 1
     }
 
     public static class Permutator

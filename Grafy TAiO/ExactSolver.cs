@@ -40,7 +40,7 @@ namespace Grafy_TAiO
                             {
                                 int gv = subsets[selection[i]][permutations[permutationSelection[i]][v]];
 
-                                int d = copy.GetEdge(gu, gv) - H.GetEdge(u, v);
+                                int d = H.GetEdge(u, v) - copy.GetEdge(gu, gv);
 
                                 if (d > 0)
                                 {
