@@ -10,7 +10,7 @@ services:
       - ./output:/app/output
     # Example: Run with input file and output file
     # Uncomment and modify the line below to pass arguments:
-    # command: ["/app/input/graph.txt", "/app/output/result.txt"]
+    command: ["/app/input/graph.txt", "/app/output/result.txt"]
     # For approximate mode:
     # command: ["-a", "/app/input/graph.txt", "/app/output/result.txt"]
     # To just show usage, uncomment:
