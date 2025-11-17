@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   grafy-taio:
     build:
@@ -7,9 +5,14 @@ services:
       dockerfile: Dockerfile
     image: grafy-taio:latest
     container_name: grafy-taio
-    # If your application needs input files, mount a volume here
-    # volumes:
-    #   - ./input:/app/input
-    #   - ./output:/app/output
-    # If you need to pass command line arguments, use:
-    # command: ["arg1", "arg2"]
+    volumes:
+      - ./input:/app/input
+      - ./output:/app/output
+    # Example: Run with input file and output file
+    # Uncomment and modify the line below to pass arguments:
+    # command: ["/app/input/graph.txt", "/app/output/result.txt"]
+    # For approximate mode:
+    # command: ["-a", "/app/input/graph.txt", "/app/output/result.txt"]
+    # To just show usage, uncomment:
+    stdin_open: true
+    tty: true
