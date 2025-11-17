@@ -40,6 +40,8 @@ namespace Grafy_TAiO
 
             return numerator / denominator;
         }
+
+        // n! / k! * n-k ! -> n * n-1 * n-2 * .. * k+1 / n-k * n-k-1 * ... * 1
     }
 
     public static class Permutator
@@ -81,7 +83,37 @@ namespace Grafy_TAiO
 
         public static IEnumerable<int[]> GetPermutations(int setSize)
         {
-            throw new NotImplementedException();
+            int[] A = new int[setSize];
+
+            for (int i = 0; i < setSize; A[i] = i++) ;
+
+            int[] c = new int[setSize];
+
+            yield return A.ToArray();
+
+            int p = 1;
+
+            while (p < setSize)
+            {
+                if (c[p] < p)
+                {
+                    if (p % 2 == 0)
+                        (A[0], A[p]) = (A[p], A[0]);
+                    else
+                        (A[c[p]], A[p]) = (A[p], A[c[p]]);
+
+                    yield return A.ToArray();
+
+                    c[p]++;
+
+                    p = 1;
+                }
+                else
+                {
+                    c[p] = 0;
+                    p++;
+                }
+            }
         }
 
         public static IEnumerable<int[]> GetWords(int length, int alphabetSize)
@@ -147,8 +179,8 @@ namespace Grafy_TAiO
 
         public void AddEdge(int from, int to, int amount)
         {
-            adjacencyMatrix[from, to]+=amount;
-            outgoingEdges[from]+=amount;
+            adjacencyMatrix[from, to] += amount;
+            outgoingEdges[from] += amount;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -169,11 +201,11 @@ namespace Grafy_TAiO
 
             sb.AppendLine(numberOfVertices.ToString());
 
-            for(int i=0; i<numberOfVertices; i++)
+            for (int i = 0; i < numberOfVertices; i++)
             {
                 StringBuilder line = new StringBuilder($"{adjacencyMatrix[i, 0]}");
 
-                for(int j=1; j<numberOfVertices; j++)
+                for (int j = 1; j < numberOfVertices; j++)
                 {
                     line.Append($" {adjacencyMatrix[i, j]}");
                 }
