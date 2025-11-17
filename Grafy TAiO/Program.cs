@@ -30,7 +30,6 @@
             }
 #endif
 #if DEBUG
-
             bool approximate = false;
             string source = @"C:\MY\PATH\TO\SRC";
             string? destination = null;

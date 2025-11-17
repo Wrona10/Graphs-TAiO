@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  grafy-taio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: grafy-taio:latest
+    container_name: grafy-taio
+    # If your application needs input files, mount a volume here
+    # volumes:
+    #   - ./input:/app/input
+    #   - ./output:/app/output
+    # If you need to pass command line arguments, use:
+    # command: ["arg1", "arg2"]
