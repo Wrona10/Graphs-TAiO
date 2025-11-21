@@ -177,6 +177,17 @@ namespace Grafy_TAiO
             }
         }
 
+        public IEnumerable<int> GetOutgoingVertices(int u)
+        {
+            for (int v = 0; v < this.numberOfVertices; v++)
+            {
+                if (adjacencyMatrix[u,v] != 0)
+                {
+                    yield return v;
+                }
+            }
+        }
+
         public void AddEdge(int from, int to, int amount)
         {
             adjacencyMatrix[from, to] += amount;
