@@ -74,13 +74,3 @@ Your input file should contain:
 Each graph is specified as:
 - First line: number of vertices
 - Following lines: adjacency matrix (space-separated)
-
-## Known Issues
-
-**The program currently has bugs that will cause it to crash:**
-1. Line 8 in Program.cs: Logic error in argument validation (`&&` should be `||`)
-2. Line 26 in Program.cs: `Path.Exists()` doesn't exist (use `File.Exists()`)
-3. Missing implementation of `GetPermutations()` in Helpers.cs
-4. Other bugs detailed in the code review
-
-These bugs need to be fixed before the program will run correctly.
