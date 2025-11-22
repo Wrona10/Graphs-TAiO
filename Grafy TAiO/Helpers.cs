@@ -46,25 +46,25 @@ namespace Grafy_TAiO
 
     public static class Permutator
     {
-        public static IEnumerable<int[]> GetCombinations(int length, int setSize)
+        public static IEnumerable<int[]> GetCombinations(int subsetSize, int setSize)
         {
-            int[] result = new int[length];
+            int[] result = new int[subsetSize];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < subsetSize; i++)
                 result[i] = i;
 
             yield return result.ToArray();
 
             while (true)
             {
-                if (result[length - 1] < setSize - 1)
+                if (result[subsetSize - 1] < setSize - 1)
                 {
-                    result[length - 1]++;
+                    result[subsetSize - 1]++;
                     yield return result.ToArray();
                     continue;
                 }
 
-                int i = length - 2;
+                int i = subsetSize - 2;
 
                 while (i >= 0 && result[i] + 1 == result[i + 1])
                     i--;
@@ -74,7 +74,7 @@ namespace Grafy_TAiO
 
                 result[i]++;
 
-                for (i++; i < length; i++)
+                for (i++; i < subsetSize; i++)
                     result[i] = result[i - 1] + 1;
 
                 yield return result.ToArray();

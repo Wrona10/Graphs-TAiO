@@ -23,19 +23,19 @@ namespace Grafy_TAiO
             int[] tG = GetSortedIndices(G);
             int[] tH = GetSortedIndices(H);
 
-            int[][] P = Permutator.GetCombinations(k, H.GetNumberOfVertices()).ToArray();
+            int[][] P = Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()).ToArray();
 
             for (int i = 0; i < k; i++)
             {
                 for (int u = 0; u < H.GetNumberOfVertices(); u++)
                 {
-                    foreach (int v in H.GetOutgoingVertices(u))
+                    for (int v = 0; v < H.GetNumberOfVertices(); v++)
                     {
-                        int d = H.GetEdge(P[i][tH[u]], P[i][tH[v]]) - G.GetEdge(P[i][tG[u]], P[i][tG[v]]);
+                        int d = H.GetEdge(tH[u], tH[v]) - G.GetEdge(tG[P[i][u]], tG[P[i][v]]);
                         if (d > 0)
                         {
-                            G.AddEdge(P[i][tG[u]], P[i][tG[v]], d);
-                            operationsCount++;
+                            G.AddEdge(tG[P[i][u]], tG[P[i][v]], d);
+                            operationsCount += d;
                         }
                     }
                 }
@@ -44,7 +44,7 @@ namespace Grafy_TAiO
             return (G, operationsCount);
         }
 
-        private int[] GetSortedIndices(Graph G) 
+        private int[] GetSortedIndices(Graph G)
         {
             int[] tG = new int[G.GetNumberOfVertices()];
             for (int i = 0; i < G.GetNumberOfVertices(); i++)
