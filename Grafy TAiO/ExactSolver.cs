@@ -26,7 +26,7 @@ namespace Grafy_TAiO
 
             foreach (var selection in Permutator.GetCombinations(k, subsets.Length))
             {
-                foreach (int[] permutationSelection in Permutator.GetWords(k, H.GetNumberOfVertices()))
+                foreach (int[] permutationSelection in Permutator.GetWords(k, permutations.Length))
                 {
                     Graph copy = new Graph(G);
                     int currentEdgeAdditions = 0;
