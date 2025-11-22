@@ -123,11 +123,11 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Run exact tests (n=1..10)
+    # Run exact tests
     exact_results = run_all_tests("input/exact/", "output/exact/", "exact", args.docker)
     print_stats(exact_results, "exact")
 
-    # Run approx tests (n=10..100)
+    # Run approx tests
     approx_results = run_all_tests(
         "input/approx/", "output/approx/", "approx", args.docker
     )

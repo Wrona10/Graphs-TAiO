@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # tests for exact
     exact_dir = "input/exact/"
     exact_min_size = 1
-    exact_max_size = 10
+    exact_max_size = 11
     exact_step = 1
     for exact_n in range(exact_min_size, exact_max_size + 1, exact_step):
         generate_testset(
