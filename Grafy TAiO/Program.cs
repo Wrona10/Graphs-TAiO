@@ -23,10 +23,21 @@
             if(args.Length == (approximate ? 3 : 2))
                 destination = args[approximate ? 2 : 1];
 
-            if((args.Length == 3 && !approximate) || !Path.Exists(source) || (destination == null || !Path.Exists(destination)))
+            if((args.Length == 3 && !approximate) || !File.Exists(source))
             {
                 Usage();
                 return;
+            }
+
+            // If destination is provided, ensure its directory exists
+            if(destination != null)
+            {
+                string? destDir = Path.GetDirectoryName(destination);
+                if(destDir != null && !Directory.Exists(destDir))
+                {
+                    Usage();
+                    return;
+                }
             }
 #endif
 #if DEBUG

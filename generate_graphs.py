@@ -91,9 +91,9 @@ def generate_testset(
     count: int,
     n1: int,
     n2: int,
-    k: Optional[int] = None,
-    edge_func: Callable[[int, int, int], int] = default_multi_edge_func,
+    k: Optional[int],
     allow_loops: bool = False,
+    edge_func: Callable[[int, int, int], int] = default_multi_edge_func,
     prefix: str = "test",
 ) -> list[str]:
     """Generate multiple test cases, each saved to a separate file."""
@@ -103,7 +103,9 @@ def generate_testset(
 
     files = []
     for i in range(1, count + 1):
-        filename = os.path.join(output_dir, f"{prefix}_{i:03d}.txt")
+        filename = os.path.join(
+            output_dir, f"{prefix}_n1_{n1:03d}_n2_{n2:03d}_k_{k:03d}_{i:03d}.txt"
+        )
         save_test_input(filename, n1, n2, k, edge_func, edge_func, allow_loops)
         files.append(filename)
 
@@ -159,16 +161,14 @@ if __name__ == "__main__":
         "default": default_multi_edge_func,
         "dense": dense_edge_func,
     }
-    edge_func = edge_funcs[args.density]
 
-    output_dir = args.output_dir
     generate_testset(
-        output_dir,
-        args.count,
-        args.n1,
-        args.n2,
-        args.k,
-        edge_func,
+        output_dir=args.output_dir,
+        count=args.count,
+        n1=args.n1,
+        n2=args.n2,
+        k=args.k,
+        edge_func=edge_funcs[args.density],
         allow_loops=args.loops,
         prefix=args.prefix,
     )

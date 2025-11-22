@@ -71,3 +71,20 @@ graph = generate_graph(5, edge_func=my_edge_func, allow_loops=True)
 | `--density` | Preset: sparse, default, dense, multi |
 | `--loops` | Allow self-loops |
 | `--seed` | Random seed for reproducibility |
+
+## Running Tests
+
+Use `run_tests.py` to execute all tests and measure performance:
+
+```bash
+# Run with Docker
+python3 run_tests.py --docker
+
+# Run with dotnet directly
+python3 run_tests.py
+```
+
+The script will:
+- Execute all tests from `input/exact/` and `input/approx/`
+- Save results to `output/exact/` and `output/approx/`
+- Calculate and display average execution time for each graph size (n1)
