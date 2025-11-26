@@ -5,37 +5,56 @@
         static void Main(string[] args)
         {
 #if RELEASE
-            if(args.Length < 1 || args.Length > 3)
+            if (args.Length < 1 || args.Length > 3)
             {
                 Usage();
                 return;
             }
 
+            int currentIndex = 0;
             bool approximate = false;
-            string source;
-            string? destination = null;
 
-            if(args[0] == "-a")
+            if (args[currentIndex] == "-a")
+            {
                 approximate = true;
-            
-            source = args[approximate ? 1 : 0];
+                currentIndex++;
+            }
 
-            if(args.Length == (approximate ? 3 : 2))
-                destination = args[approximate ? 2 : 1];
-
-            if((args.Length == 3 && !approximate) || !File.Exists(source))
+            if (currentIndex >= args.Length)
             {
                 Usage();
                 return;
             }
 
-            // If destination is provided, ensure its directory exists
-            if(destination != null)
+            string source = args[currentIndex];
+            currentIndex++;
+
+            if (!File.Exists(source))
+            {
+                Console.WriteLine($"Error: Source file '{source}' does not exist.");
+                Usage();
+                return;
+            }
+
+            string? destination = null;
+            if (currentIndex < args.Length)
+            {
+                destination = args[currentIndex];
+                currentIndex++;
+            }
+
+            if (currentIndex < args.Length)
+            {
+                Usage();
+                return;
+            }
+
+            if (destination != null)
             {
                 string? destDir = Path.GetDirectoryName(destination);
-                if(destDir != null && !Directory.Exists(destDir))
+                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
                 {
-                    Usage();
+                    Console.WriteLine($"Error: Destination directory '{destDir}' does not exist.");
                     return;
                 }
             }
