@@ -1,7 +1,9 @@
-Uwagi pana Homendy:
-1. Poprawić dokumentację na kolejny etap z opisem algorytmu znajdowania permutacji (+ ew. inne nieścisłości).
-2. Możliwość uruchomienia 4 programów (może być ta sama binarka, tylko z flagą): zwraca rozszerzenie lub odległość (dla każdej opcji dokładny lub aproksyamcyjny).
-3. Testy średniego czasu wykonania (dla kazdej z ww. opcji) dla dokładnego n=1,2,...,10, dla aproksymacyjnego n=10,20,...,100
+## Running Locally
+
+```bash
+dotnet run --project "Grafy TAiO/Grafy TAiO.csproj" -- input.txt output.txt       # exact mode
+dotnet run --project "Grafy TAiO/Grafy TAiO.csproj" -- -a input.txt output.txt    # approximate mode
+```
 
 ## Test Generation & Running
 
@@ -19,7 +21,7 @@ Structure: `input/{exact,approx}/{random,chain,clique,grid}/`
 ```bash
 python run_tests.py                          # both modes, all types
 python run_tests.py --mode exact --types random chain
-python run_tests.py --mode approx --docker
+python run_tests.py --mode approx --docker   # use containerized app
 ```
 
 Results saved to `output/{exact,approx}/{type}/`.
