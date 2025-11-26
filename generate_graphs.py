@@ -9,6 +9,35 @@ def dense_edge_func(u: int, v: int, n: int) -> int:
     return 0
 
 
+def chain_edge_func(u: int, v: int, n: int) -> int:
+    """Chain: 0→1→2→3→... (like train cars)"""
+    return 1 if v == u + 1 else 0
+
+
+def clique_edge_func(clique_size: int):
+    """Factory: first clique_size nodes fully connected, rest isolated."""
+    def edge_func(u: int, v: int, n: int) -> int:
+        if u < clique_size and v < clique_size and u != v:
+            return 1
+        return 0
+    return edge_func
+
+
+def grid_edge_func(width: int):
+    """Factory: grid graph with given width. Nodes arranged in rows."""
+    def edge_func(u: int, v: int, n: int) -> int:
+        row_u, col_u = u // width, u % width
+        row_v, col_v = v // width, v % width
+        # connect to right neighbor
+        if row_u == row_v and col_v == col_u + 1:
+            return 1
+        # connect to bottom neighbor
+        if col_u == col_v and row_v == row_u + 1:
+            return 1
+        return 0
+    return edge_func
+
+
 def sparse_edge_func(u: int, v: int, n: int) -> int:
     """Sparse graph: 20% chance of 1 edge."""
     return 1 if random.random() < 0.2 else 0
@@ -140,11 +169,23 @@ if __name__ == "__main__":
         help="Filename prefix for batch mode",
     )
     parser.add_argument(
-        "--density",
+        "--type",
         type=str,
-        choices=["sparse", "default", "dense"],
+        choices=["sparse", "default", "dense", "chain", "clique", "grid"],
         default="default",
-        help="Graph density preset",
+        help="Graph type preset",
+    )
+    parser.add_argument(
+        "--clique-size",
+        type=int,
+        default=None,
+        help="Size of clique for --type=clique (defaults to n)",
+    )
+    parser.add_argument(
+        "--grid-width",
+        type=int,
+        default=None,
+        help="Width of grid for --type=grid (defaults to sqrt(n))",
     )
     parser.add_argument("--loops", action="store_true", help="Allow self-loops")
     parser.add_argument(
@@ -156,10 +197,15 @@ if __name__ == "__main__":
     if args.seed is not None:
         random.seed(args.seed)
 
+    import math
+
     edge_funcs = {
         "sparse": sparse_edge_func,
         "default": default_multi_edge_func,
         "dense": dense_edge_func,
+        "chain": chain_edge_func,
+        "clique": clique_edge_func(args.clique_size or args.n1),
+        "grid": grid_edge_func(args.grid_width or int(math.sqrt(args.n1))),
     }
 
     generate_testset(
@@ -168,7 +214,7 @@ if __name__ == "__main__":
         n1=args.n1,
         n2=args.n2,
         k=args.k,
-        edge_func=edge_funcs[args.density],
+        edge_func=edge_funcs[args.type],
         allow_loops=args.loops,
         prefix=args.prefix,
     )

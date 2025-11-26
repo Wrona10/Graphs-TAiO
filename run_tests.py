@@ -11,39 +11,39 @@ from pathlib import Path
 RED = "\033[91m"
 RESET = "\033[0m"
 
+INPUT_DIR = "input"
+OUTPUT_DIR = "output"
 
-def parse_n1(filename):
-    """Extract n1 from filename like test_n1_010_n2_010_k_002_001.txt or test_n110_n210_k02_001.txt"""
-    match = re.search(r"n1_(\d+)", filename)
-    return int(match.group(1)) if match else None
+
+def parse_n1(filepath):
+    """Extract n1 from the first number in the test file."""
+    try:
+        with open(filepath, "r") as f:
+            first_line = f.readline().strip()
+            match = re.match(r"(\d+)", first_line)
+            return int(match.group(1)) if match else None
+    except Exception:
+        return None
 
 
 def run_test(input_file, output_file, mode="exact", use_docker=False):
     """Run single test and return execution time in seconds."""
     if use_docker:
-        # Docker command with volume mounts
         input_path = os.path.abspath(input_file)
         output_path = os.path.abspath(output_file)
         output_dir = os.path.dirname(output_path)
-
-        # Ensure output directory exists before mounting
         os.makedirs(output_dir, exist_ok=True)
 
         cmd = [
-            "docker",
-            "run",
-            "--rm",
-            "-v",
-            f"{input_path}:/app/input.txt:ro",
-            "-v",
-            f"{output_dir}:/app/output",
+            "docker", "run", "--rm",
+            "-v", f"{input_path}:/app/input.txt:ro",
+            "-v", f"{output_dir}:/app/output",
             "grafy-taio:latest",
         ]
         if mode == "approx":
             cmd.append("-a")
         cmd.extend(["/app/input.txt", f"/app/output/{os.path.basename(output_path)}"])
     else:
-        # Direct dotnet command
         cmd = ["dotnet", "run", "--project", "Grafy TAiO/Grafy TAiO.csproj", "--"]
         if mode == "approx":
             cmd.append("-a")
@@ -56,14 +56,11 @@ def run_test(input_file, output_file, mode="exact", use_docker=False):
         elapsed = time.time() - start
 
         if result.returncode != 0:
-            print(
-                f"{RED}  FAILED: {input_file.name} - Exit code: {result.returncode}{RESET}"
-            )
+            print(f"{RED}  FAILED: {input_file.name} - Exit code: {result.returncode}{RESET}")
             if result.stderr:
                 print(f"{RED}     Error: {result.stderr[:150]}{RESET}")
             return None
 
-        # Check if output file was actually created
         if not os.path.exists(output_file):
             print(f"{RED}  WARNING: Output file not created: {output_file}{RESET}")
 
@@ -83,14 +80,12 @@ def run_test(input_file, output_file, mode="exact", use_docker=False):
 def run_all_tests(test_dir, output_dir, mode="exact", use_docker=False):
     """Run all tests in directory, return dict of n1 -> [times]"""
     results = defaultdict(list)
-
-    # Create output directory
     os.makedirs(output_dir, exist_ok=True)
 
     print(f"\n=== Running {mode.upper()} tests from {test_dir} ===")
 
     for test_file in sorted(Path(test_dir).glob("*.txt")):
-        n1 = parse_n1(test_file.name)
+        n1 = parse_n1(test_file)
         if n1 is None:
             continue
 
@@ -102,9 +97,13 @@ def run_all_tests(test_dir, output_dir, mode="exact", use_docker=False):
     return results
 
 
-def print_stats(results, mode):
+def print_stats(results, label):
     """Print average times per n1."""
-    print(f"\n=== {mode.upper()} RESULTS ===")
+    if not results:
+        print(f"\n=== {label} - No results ===")
+        return
+
+    print(f"\n=== {label} RESULTS ===")
     print(f"{'n1':<6} {'Count':<8} {'Avg Time (s)':<15}")
     print("-" * 30)
 
@@ -114,21 +113,51 @@ def print_stats(results, mode):
         print(f"{n1:<6} {len(times):<8} {avg:<15.4f}")
 
 
+def discover_graph_types(mode):
+    """Discover graph type subdirectories for a given mode (exact/approx)."""
+    mode_path = Path(INPUT_DIR) / mode
+    if not mode_path.exists():
+        return []
+
+    return [d.name for d in sorted(mode_path.iterdir()) if d.is_dir() and list(d.glob("*.txt"))]
+
+
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Run graph algorithm tests")
-    parser.add_argument(
-        "--docker", action="store_true", help="Use Docker instead of direct dotnet"
-    )
+    parser.add_argument("--docker", action="store_true", help="Use Docker instead of direct dotnet")
+    parser.add_argument("--mode", type=str, choices=["exact", "approx", "both"], default="both", help="Algorithm mode")
+    parser.add_argument("--types", type=str, nargs="+", default=None, help="Graph types to test (default: all)")
     args = parser.parse_args()
 
-    # Run exact tests
-    exact_results = run_all_tests("input/exact/", "output/exact/", "exact", args.docker)
-    print_stats(exact_results, "exact")
+    modes = ["exact", "approx"] if args.mode == "both" else [args.mode]
 
-    # Run approx tests
-    approx_results = run_all_tests(
-        "input/approx/", "output/approx/", "approx", args.docker
-    )
-    print_stats(approx_results, "approx")
+    all_results = {}
+    for mode in modes:
+        available_types = discover_graph_types(mode)
+        if not available_types:
+            print(f"No test directories found in {INPUT_DIR}/{mode}/")
+            continue
+
+        types_to_run = args.types if args.types else available_types
+        types_to_run = [t for t in types_to_run if t in available_types]
+
+        for graph_type in types_to_run:
+            input_dir = f"{INPUT_DIR}/{mode}/{graph_type}/"
+            output_dir = f"{OUTPUT_DIR}/{mode}/{graph_type}/"
+
+            results = run_all_tests(input_dir, output_dir, mode, args.docker)
+            label = f"{graph_type.upper()} ({mode})"
+            all_results[label] = results
+            print_stats(results, label)
+
+    # Summary
+    print("\n" + "=" * 50)
+    print("SUMMARY")
+    print("=" * 50)
+    for label, results in all_results.items():
+        if results:
+            total_tests = sum(len(times) for times in results.values())
+            total_time = sum(sum(times) for times in results.values())
+            print(f"{label}: {total_tests} tests, {total_time:.2f}s total")
