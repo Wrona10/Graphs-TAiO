@@ -1,0 +1,16 @@
+----------------------------
+Uruchomienie programu
+----------------------------
+
+Aby uruchomić program, należy otworzyć wiersz poleceń w folderze Exe, a następnie wykonać polecenie:
+	Polecenie:	"Grafy TAiO.exe" [-a] src [dst]
+Opis parametrów:
+	-a -- (opcjonalny) uruchamia algorytm aproksymacyjny. Jeśli parametr nie zostanie podany, domyślnie uruchamiany jest algorytm dokładny
+	src -- (wymagany) ścieżka do pliku wejściowego.
+	dst -- (opcjonalny) ścieżka do pliku wyjściowego. Jeśli podano ten parametr, wynik obliczeń zostanie zapisany do wskazanego pliku. Jeśli go pominiemy, wynik zostanie wyświetlony wyłącznie w konsoli.
+----------------------------
+Przykłady uruchomienia
+----------------------------
+Uruchomienie algorytmu dokładnego dla pliku C:\MY\PATH\graf.txt: 	"Grafy TAiO.exe" "C:\MY\PATH\graf.txt"
+
+Uruchomienie algorytmu aproksymacyjnego dla pliku C:\MY\PATH\graf.txt: 	"Grafy TAiO.exe" -a "C:\MY\PATH\graf.txt"
