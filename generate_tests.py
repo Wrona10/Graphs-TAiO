@@ -7,33 +7,37 @@ from generate_graphs import (
 )
 import math
 
-INPUT_DIR = "input"
+INPUT_DIR = "test_my_input"
 
 # Test configurations: (n1, n2, k) tuples, always n1 >= n2
 # Exact: n1 = 1..11, Approx: n1 = 10,20,...,100
 
-def generate_configs(n1_values, k_values):
+def generate_configs(n1_values, n2_values, k_values):
     """Generate (n1, n2, k) configs where n2 = n1 - 1."""
     configs = []
     for n1 in n1_values:
-        for k in k_values:
-            if k <= n1 and n1 > 1:
-                n2 = n1 - 1
-                configs.append((n1, n2, k))
+        for n2 in n2_values:
+            for k in k_values:
+                if n1 >= n2:
+                    configs.append((n1, n2, k))
     return configs
 
-EXACT_N1 = list(range(1, 11))  # 1..10
-APPROX_N1 = list(range(10, 101, 10))  # 10,20,...,100
+EXACT_N1 = [2, 3, 4, 5, 6, 7, 8, 9]  
+EXACT_N2 = [2, 3, 4]  
+EXACT_K = [1, 2, 3]
+APPROX_N1 = [10, 20, 30, 50, 70, 100]  
+APPROX_N2 = [5, 15, 25, 50, 75]
+APPROX_K = [1, 2, 3, 5, 7, 10]
 
-EXACT_CONFIGS = generate_configs(EXACT_N1, k_values=[2])
-APPROX_CONFIGS = generate_configs(APPROX_N1, k_values=[2])
+EXACT_CONFIGS = generate_configs(EXACT_N1, EXACT_N2, EXACT_K)
+APPROX_CONFIGS = generate_configs(APPROX_N1, APPROX_N2, APPROX_K)
 
 # Grid needs perfect squares
 GRID_EXACT_N1 = [1, 4, 9]
 GRID_APPROX_N1 = [16, 25, 36, 49, 64, 81, 100]
 
-GRID_EXACT_CONFIGS = generate_configs(GRID_EXACT_N1, k_values=[2])
-GRID_APPROX_CONFIGS = generate_configs(GRID_APPROX_N1, k_values=[2])
+#GRID_EXACT_CONFIGS = generate_configs(GRID_EXACT_N1, k_values=[2])
+#GRID_APPROX_CONFIGS = generate_configs(GRID_APPROX_N1, k_values=[2])
 
 
 def generate_for_type(graph_type, edge_func_factory, configs, mode, count):
@@ -59,7 +63,7 @@ def generate_all(types, count):
         "random": (lambda n: default_multi_edge_func, EXACT_CONFIGS, APPROX_CONFIGS),
         "chain": (lambda n: chain_edge_func, EXACT_CONFIGS, APPROX_CONFIGS),
         "clique": (lambda n: clique_edge_func(n), EXACT_CONFIGS, APPROX_CONFIGS),
-        "grid": (lambda n: grid_edge_func(int(math.sqrt(n))), GRID_EXACT_CONFIGS, GRID_APPROX_CONFIGS),
+        #"grid": (lambda n: grid_edge_func(int(math.sqrt(n))), GRID_EXACT_CONFIGS, GRID_APPROX_CONFIGS),
     }
 
     for graph_type in types:
@@ -86,7 +90,7 @@ if __name__ == "__main__":
         "--types",
         type=str,
         nargs="+",
-        choices=["random", "chain", "clique", "grid", "all"],
+        choices=["random", "chain", "clique", "all"],
         default=["all"],
         help="Graph types to generate",
     )
@@ -95,6 +99,6 @@ if __name__ == "__main__":
 
     types = args.types
     if "all" in types:
-        types = ["random", "chain", "clique", "grid"]
+        types = ["random", "chain", "clique"]
 
     generate_all(types, args.count)
