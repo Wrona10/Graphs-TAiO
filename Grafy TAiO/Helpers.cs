@@ -38,7 +38,7 @@ namespace Grafy_TAiO
             for (int i = n - k; i > 1; i--)
                 denominator *= i;
 
-            return (long)(Math.Clamp(numerator / denominator, 0, long.MaxValue));
+            return (long)(Math.Clamp(numerator / denominator, 0, int.MaxValue));
         }
 
         // n! / k! * n-k ! -> n * n-1 * n-2 * .. * k+1 / n-k * n-k-1 * ... * 1
