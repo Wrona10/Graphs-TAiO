@@ -10,7 +10,7 @@ import math
 INPUT_DIR = "input"
 
 # Test configurations: (n1, n2, k) tuples, always n1 >= n2
-# Exact: n1 = 1..11, Approx: n1 = 10,20,...,100
+# Exact: n1 = 1..10, Approx: n1 = 100,200,...,1000
 
 def generate_configs(n1_values, k_values):
     """Generate (n1, n2, k) configs where n2 = n1 - 1."""
@@ -22,8 +22,8 @@ def generate_configs(n1_values, k_values):
                 configs.append((n1, n2, k))
     return configs
 
-EXACT_N1 = list(range(1, 11))  # 1..10
-APPROX_N1 = list(range(10, 101, 10))  # 10,20,...,100
+EXACT_N1 = list(range(1, 10))  # 1..10
+APPROX_N1 = list(range(100, 1000+1, 100))  # 100,200,...,1000
 
 EXACT_CONFIGS = generate_configs(EXACT_N1, k_values=[2])
 APPROX_CONFIGS = generate_configs(APPROX_N1, k_values=[2])
