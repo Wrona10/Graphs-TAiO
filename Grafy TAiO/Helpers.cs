@@ -22,15 +22,15 @@ namespace Grafy_TAiO
             return result;
         }
 
-        public static int BinomialCoefficient(int n, int k)
+        public static long BinomialCoefficient(int n, int k)
         {
             if (k < 0 || k > n)
                 return 0;
 
             k = Math.Max(k, n - k);
 
-            int numerator = 1;
-            int denominator = 1;
+            double numerator = 1;
+            double denominator = 1;
 
             for (int i = n; i > k; i--)
                 numerator *= i;
@@ -38,7 +38,7 @@ namespace Grafy_TAiO
             for (int i = n - k; i > 1; i--)
                 denominator *= i;
 
-            return numerator / denominator;
+            return (long)(Math.Clamp(numerator / denominator, 0, int.MaxValue));
         }
 
         // n! / k! * n-k ! -> n * n-1 * n-2 * .. * k+1 / n-k * n-k-1 * ... * 1
