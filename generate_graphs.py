@@ -16,15 +16,18 @@ def chain_edge_func(u: int, v: int, n: int) -> int:
 
 def clique_edge_func(clique_size: int):
     """Factory: first clique_size nodes fully connected, rest isolated."""
+
     def edge_func(u: int, v: int, n: int) -> int:
         if u < clique_size and v < clique_size and u != v:
             return 1
         return 0
+
     return edge_func
 
 
 def grid_edge_func(width: int):
     """Factory: grid graph with given width. Nodes arranged in rows."""
+
     def edge_func(u: int, v: int, n: int) -> int:
         row_u, col_u = u // width, u % width
         row_v, col_v = v // width, v % width
@@ -35,6 +38,7 @@ def grid_edge_func(width: int):
         if col_u == col_v and row_v == row_u + 1:
             return 1
         return 0
+
     return edge_func
 
 
@@ -133,7 +137,7 @@ def generate_testset(
     files = []
     for i in range(1, count + 1):
         filename = os.path.join(
-            output_dir, f"{prefix}_n1_{n1:03d}_n2_{n2:03d}_k_{k:03d}_{i:03d}.txt"
+            output_dir, f"{prefix}_n1_{n1:06d}_n2_{n2:06d}_k_{k:03d}_{i:03d}.txt"
         )
         save_test_input(filename, n1, n2, k, edge_func, edge_func, allow_loops)
         files.append(filename)

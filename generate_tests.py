@@ -8,7 +8,7 @@ from generate_graphs import (
     grid_edge_func,
 )
 
-INPUT_DIR = "test_my_input"
+INPUT_DIR = "input"
 
 # Test configurations: (n1, n2, k) tuples, always n1 >= n2
 # Exact: n1 = 1..10, Approx: n1 = 100,200,...,1000
@@ -19,7 +19,7 @@ def generate_configs(n1_values, n2_values, k_values):
     N = len(n1_values)
     if N != len(n2_values) or N != len(k_values):
         raise Exception("Lengths of config parameters lists don't match")
-    for i in range(0, N + 1):
+    for i in range(N):
         configs.append((n1_values[i], n2_values[i], k_values[i]))
     return configs
 
@@ -27,9 +27,9 @@ def generate_configs(n1_values, n2_values, k_values):
 EXACT_N1 = [2, 3, 4]
 EXACT_N2 = [2, 3, 4]
 EXACT_K = [2, 2, 2]
-APPROX_N1 = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-APPROX_N2 = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
-APPROX_K = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+APPROX_N1 = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]
+APPROX_N2 = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]
+APPROX_K = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
 
 EXACT_CONFIGS = generate_configs(EXACT_N1, EXACT_N2, EXACT_K)
 APPROX_CONFIGS = generate_configs(APPROX_N1, APPROX_N2, APPROX_K)
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate tests")
     parser.add_argument(
-        "--count", type=int, default=10, help="Number of testcases per config"
+        "--count", type=int, default=5, help="Number of testcases per config"
     )
     parser.add_argument(
         "--types",
