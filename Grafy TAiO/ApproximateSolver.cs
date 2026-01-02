@@ -8,7 +8,7 @@ namespace Grafy_TAiO
 {
     internal class ApproximateSolver : ISolver
     {
-        public (Graph, int) Solve(Graph G, Graph H, int k)
+        public (Graph, int, int[][]) Solve(Graph G, Graph H, int k)
         {
             int missingVertices = 0;
             while (Helpers.BinomialCoefficient(G.GetNumberOfVertices() + missingVertices, H.GetNumberOfVertices()) < k)
@@ -25,9 +25,11 @@ namespace Grafy_TAiO
 
             int i = 0;
 
+            int[][] verticeSelections = new int[k][];
+
             foreach (var P in Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()))
             {
-                if (i++ >= k)
+                if (i >= k)
                     break;
 
                 for (int u = 0; u < H.GetNumberOfVertices(); u++)
@@ -42,9 +44,18 @@ namespace Grafy_TAiO
                         }
                     }
                 }
+
+                verticeSelections[i] = new int[H.GetNumberOfVertices()];
+
+                for(int t = 0; t < H.GetNumberOfVertices(); t++)
+                {
+                    verticeSelections[i][tH[t]] = tG[P[t]];
+                }
+
+                i++;
             }
 
-            return (G, operationsCount);
+            return (G, operationsCount, verticeSelections);
         }
 
         private int[] GetSortedIndices(Graph G)

@@ -8,6 +8,6 @@ namespace Grafy_TAiO
 {
     internal interface ISolver
     {
-        public (Graph, int) Solve(Graph G, Graph H, int k);
+        public (Graph, int, int[][]) Solve(Graph G, Graph H, int k);
     }
 }

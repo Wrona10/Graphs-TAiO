@@ -79,22 +79,68 @@
                 return;
             }
 
+            if (H.GetNumberOfVertices() == 0)
+            {
+                Console.WriteLine("Please provide a non-empty graph H!");
+                Usage();
+                return;
+            }
+
             ISolver solver = approximate ? new ApproximateSolver() : new ExactSolver();
 
-            (Graph result, int edits) = solver.Solve(G, H, k);
+            (Graph result, int edits, int[][] verticeSelections) = solver.Solve(G, H, k);
 
-            if(destination != null)
+            if (destination != null)
             {
-                using(StreamWriter sw =  new StreamWriter(destination))
+                using (StreamWriter sw = new StreamWriter(destination))
                 {
+                    sw.WriteLine("Given graph G:");
+                    sw.WriteLine(G.ToString());
+                    sw.WriteLine("Given graph H to find in G:");
+                    sw.WriteLine(H.ToString());
+                    sw.WriteLine();
+                    sw.WriteLine($"And given number of copies to find k is {k}");
+                    sw.WriteLine();
+                    sw.WriteLine($"Solution found with {edits} editions:");
                     sw.Write(result.ToString());
-                    sw.WriteLine($"{edits}");
+                    sw.WriteLine();
+                    sw.WriteLine("The difference between the base graph and result is:");
+                    sw.Write(result.GetAdditions(G));
+                    sw.WriteLine();
+                    sw.WriteLine("Selections for the subraph are as follows:");
+                    for (int i = 0; i < k; i++)
+                    {
+                        sw.WriteLine();
+                        sw.Write(result.ShowSubgraph(H, verticeSelections[i]));
+                    }
                 }
             }
             else
             {
-                Console.WriteLine($"Solutions found with {edits} editions:");
+                Console.WriteLine("Given graph G:");
+                Console.WriteLine(G.ToString());
+
+                Console.WriteLine("Given graph H to find in G:");
+                Console.WriteLine(H.ToString());
+
+                Console.WriteLine($"Given number of copies to find k is {k}");
+                Console.WriteLine();
+
+                Console.WriteLine($"Solution found with {edits} editions:");
                 Console.Write(result.ToString());
+                Console.WriteLine();
+
+                Console.WriteLine("The difference between the base graph and result is:");
+                Console.Write(result.GetAdditions(G));
+                Console.WriteLine();
+
+                Console.WriteLine("Selections for the subgraph are as follows:");
+                for (int i = 0; i < k; i++)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine($"Nr {i + 1}:");
+                    Console.Write(result.ShowSubgraph(H, verticeSelections[i]));
+                }
             }
         }
 
@@ -125,7 +171,7 @@
 
                 string? line = sr.ReadLine();
 
-                if(line != null)
+                if (line != null)
                 {
                     if (line.Trim().Split().Length > 1)
                         throw new ArgumentException();

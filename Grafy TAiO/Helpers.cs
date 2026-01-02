@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using System.Xml.Schema;
 
 namespace Grafy_TAiO
 {
@@ -181,7 +182,7 @@ namespace Grafy_TAiO
         {
             for (int v = 0; v < this.numberOfVertices; v++)
             {
-                if (adjacencyMatrix[u,v] != 0)
+                if (adjacencyMatrix[u, v] != 0)
                 {
                     yield return v;
                 }
@@ -212,16 +213,223 @@ namespace Grafy_TAiO
 
             sb.AppendLine(numberOfVertices.ToString());
 
+            int maxEdges = 0;
+
             for (int i = 0; i < numberOfVertices; i++)
             {
-                StringBuilder line = new StringBuilder($"{adjacencyMatrix[i, 0]}");
+                for (int j = 0; j < numberOfVertices; j++)
+                {
+                    if (adjacencyMatrix[i, j] > maxEdges)
+                        maxEdges = adjacencyMatrix[i, j];
+                }
+            }
+
+            int maxLength = maxEdges.ToString().Length;
+
+            for (int i = 0; i < numberOfVertices; i++)
+            {
+                StringBuilder line = new StringBuilder(adjacencyMatrix[i, 0].ToString().PadLeft(maxLength));
 
                 for (int j = 1; j < numberOfVertices; j++)
                 {
-                    line.Append($" {adjacencyMatrix[i, j]}");
+                    line.Append(" " + adjacencyMatrix[i, j].ToString().PadLeft(maxLength));
                 }
 
                 sb.AppendLine(line.ToString());
+            }
+
+            return sb.ToString();
+        }
+
+        public string GetAdditions(Graph compareBase)
+        {
+            if (numberOfVertices < compareBase.numberOfVertices)
+                throw new ArgumentException("Can't show deletions!");
+
+            if (numberOfVertices == 0)
+                return "0\n";
+
+            StringBuilder sb = new StringBuilder();
+
+            if (numberOfVertices > compareBase.numberOfVertices)
+            {
+                sb.AppendLine($"{numberOfVertices} vertices ({compareBase.numberOfVertices} base + {numberOfVertices - compareBase.numberOfVertices} added)");
+            }
+            else
+            {
+                sb.AppendLine($"{numberOfVertices} vertices (none added)");
+            }
+
+            int maxEdges = 0;
+
+            for (int i = 0; i < compareBase.numberOfVertices; i++)
+            {
+                for (int j = 0; j < compareBase.numberOfVertices; j++)
+                {
+                    if (adjacencyMatrix[i, j] - compareBase.adjacencyMatrix[i, j] > maxEdges)
+                        maxEdges = adjacencyMatrix[i, j] - compareBase.adjacencyMatrix[i, j];
+                }
+
+                for (int j = compareBase.numberOfVertices; j < numberOfVertices; j++)
+                {
+                    if (adjacencyMatrix[i, j] > maxEdges)
+                        maxEdges = adjacencyMatrix[i, j];
+                }
+            }
+
+            for (int i = compareBase.numberOfVertices; i < numberOfVertices; i++)
+            {
+                for (int j = 0; j < numberOfVertices; j++)
+                {
+                    if (adjacencyMatrix[i, j] > maxEdges)
+                        maxEdges = adjacencyMatrix[i, j];
+                }
+            }
+
+            int maxLength = maxEdges.ToString().Length + 1;
+
+            for (int i = 0; i < compareBase.numberOfVertices; i++)
+            {
+                StringBuilder line = new();
+
+                int t;
+                if ((t = adjacencyMatrix[i, 0] - compareBase.adjacencyMatrix[i, 0]) > 0)
+                    line.Append(("+" + t.ToString()).PadLeft(maxLength));
+                else
+                    line.Append("0".PadLeft(maxLength));
+
+                for (int j = 1; j < compareBase.numberOfVertices; j++)
+                {
+                    if ((t = adjacencyMatrix[i, j] - compareBase.adjacencyMatrix[i, j]) > 0)
+                        line.Append(" " + ("+" + t.ToString()).PadLeft(maxLength));
+                    else
+                        line.Append(" " + "0".PadLeft(maxLength));
+                }
+
+                for (int j = compareBase.numberOfVertices; j < numberOfVertices; j++)
+                {
+                    if ((t = adjacencyMatrix[i, j]) > 0)
+                        line.Append(" " + ("+" + t.ToString()).PadLeft(maxLength));
+                    else
+                        line.Append(" " + "0".PadLeft(maxLength));
+                }
+
+                sb.AppendLine(line.ToString());
+            }
+
+            for (int i = compareBase.numberOfVertices; i < numberOfVertices; i++)
+            {
+                StringBuilder line = new();
+
+                int t;
+                if ((t = adjacencyMatrix[i, 0]) > 0)
+                    line.Append(("+" + t.ToString()).PadLeft(maxLength));
+                else
+                    line.Append("0".PadLeft(maxLength));
+
+                for (int j = 1; j < numberOfVertices; j++)
+                {
+                    if ((t = adjacencyMatrix[i, j]) > 0)
+                        line.Append(" " + ("+" + t.ToString()).PadLeft(maxLength));
+                    else
+                        line.Append(" " + "0".PadLeft(maxLength));
+                }
+
+                sb.AppendLine(line.ToString());
+            }
+
+            return sb.ToString();
+        }
+
+        public string ShowSubgraph(Graph subgraph, int[] verticeSelections)
+        {
+            if (numberOfVertices < subgraph.numberOfVertices)
+                throw new ArgumentException("Not a subgraph!");
+
+            if (numberOfVertices == 0 || subgraph.numberOfVertices == 0)
+                return "H:\nG:\n0\n";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("H:");
+            for (int i = 0; i < subgraph.numberOfVertices; i++)
+                sb.Append($" {i}");
+            sb.AppendLine();
+
+            sb.Append("G:");
+            for (int i = 0; i < verticeSelections.Length; i++)
+                sb.Append($" {verticeSelections[i]}");
+            sb.AppendLine();
+
+            sb.AppendLine(numberOfVertices.ToString());
+
+            (int iG, int iH)[] selectedVertices = verticeSelections.Select((int g, int h) => (g, h)).OrderBy(x => x.g).ToArray();
+
+            int[] maxLengthH = new int[subgraph.numberOfVertices];
+
+            for (int j = 0; j < subgraph.numberOfVertices; j++)
+            {
+                int maxEdges = 0;
+                for (int i = 0; i < subgraph.numberOfVertices; i++)
+                {
+                    if (subgraph.adjacencyMatrix[i, j] > maxEdges)
+                        maxEdges = subgraph.adjacencyMatrix[i, j];
+                }
+
+                maxLengthH[j] = maxEdges.ToString().Length;
+            }
+
+            int[] maxLengthG = new int[numberOfVertices];
+
+            for (int j = 0; j < subgraph.numberOfVertices; j++)
+            {
+                int maxEdges = 0;
+                for (int i = 0; i < subgraph.numberOfVertices; i++)
+                {
+                    if (adjacencyMatrix[selectedVertices[i].iG, selectedVertices[j].iG] > maxEdges)
+                        maxEdges = adjacencyMatrix[selectedVertices[i].iG, selectedVertices[j].iG];
+                }
+
+                maxLengthG[j] = maxEdges.ToString().Length;
+            }
+
+            int ti = 0;
+            for (int i = 0; i < numberOfVertices; i++)
+            {
+                if (ti >= selectedVertices.Length || selectedVertices[ti].iG != i)
+                {
+                    int tj = 0;
+                    for (int j = 0; j < numberOfVertices; j++)
+                    {
+                        if (tj >= selectedVertices.Length || selectedVertices[tj].iG != j)
+                            sb.Append("- ");
+                        else
+                        {
+                            sb.Append("- ".PadLeft(maxLengthH[tj] + maxLengthG[tj] + 2));
+                            tj++;
+                        }
+                    }
+                }
+                else
+                {
+                    (int uG, int uH) = selectedVertices[ti];
+                    int tj = 0;
+                    for (int j = 0; j < numberOfVertices; j++)
+                    {
+                        if (tj >= selectedVertices.Length || selectedVertices[tj].iG != j)
+                            sb.Append("- ");
+                        else
+                        {
+                            (int vG, int vH) = selectedVertices[tj];
+                            sb.Append(subgraph.adjacencyMatrix[uH, vH].ToString().PadLeft(maxLengthH[tj])
+                                + "/" + adjacencyMatrix[uG, vG].ToString().PadLeft(maxLengthG[tj]) + " ");
+                            tj++;
+                        }
+                    }
+                    ti++;
+                }
+
+                sb.AppendLine();
             }
 
             return sb.ToString();
