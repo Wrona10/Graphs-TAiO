@@ -372,14 +372,14 @@ namespace Grafy_TAiO
                 int maxEdges = 0;
                 for (int i = 0; i < subgraph.numberOfVertices; i++)
                 {
-                    if (subgraph.adjacencyMatrix[i, j] > maxEdges)
-                        maxEdges = subgraph.adjacencyMatrix[i, j];
+                    if (subgraph.adjacencyMatrix[i, selectedVertices[j].iH] > maxEdges)
+                        maxEdges = subgraph.adjacencyMatrix[i, selectedVertices[j].iH];
                 }
 
                 maxLengthH[j] = maxEdges.ToString().Length;
             }
 
-            int[] maxLengthG = new int[numberOfVertices];
+            int[] maxLengthG = new int[subgraph.numberOfVertices];
 
             for (int j = 0; j < subgraph.numberOfVertices; j++)
             {
