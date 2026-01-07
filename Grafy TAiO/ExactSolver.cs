@@ -24,7 +24,7 @@ namespace Grafy_TAiO
             int[][] subsets = Permutator.GetCombinations(H.GetNumberOfVertices(), G.GetNumberOfVertices()).ToArray();
             int[][] permutations = Permutator.GetPermutations(H.GetNumberOfVertices()).ToArray();
 
-            int[][] verticeSelections = new int[k][];
+            int[][] chosenVerticeSelections = new int[k][];
 
             foreach (var selection in Permutator.GetCombinations(k, subsets.Length))
             {
@@ -32,6 +32,7 @@ namespace Grafy_TAiO
                 {
                     Graph copy = new Graph(G);
                     int currentEdgeAdditions = 0;
+                    int[][] verticeSelections = new int[k][];
 
                     for (int i = 0; i < k; i++)
                     {
@@ -57,7 +58,7 @@ namespace Grafy_TAiO
 
                         verticeSelections[i] = new int[H.GetNumberOfVertices()];
 
-                        for(int t = 0; t < H.GetNumberOfVertices(); t++)
+                        for (int t = 0; t < H.GetNumberOfVertices(); t++)
                         {
                             verticeSelections[i][t] = subsets[selection[i]][permutations[permutationSelection[i]][t]];
                         }
@@ -67,13 +68,14 @@ namespace Grafy_TAiO
                     {
                         minimalEdgeAdditions = currentEdgeAdditions;
                         minimalExtension = copy;
+                        chosenVerticeSelections = verticeSelections;
                     }
 
                 skip:;
                 }
             }
 
-            return (minimalExtension, missingVertices + minimalEdgeAdditions, verticeSelections);
+            return (minimalExtension, missingVertices + minimalEdgeAdditions, chosenVerticeSelections);
         }
     }
 }
