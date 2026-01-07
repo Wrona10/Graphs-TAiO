@@ -379,7 +379,7 @@ namespace Grafy_TAiO
                 maxLengthH[j] = maxEdges.ToString().Length;
             }
 
-            int[] maxLengthG = new int[numberOfVertices];
+            int[] maxLengthG = new int[subgraph.numberOfVertices];
 
             for (int j = 0; j < subgraph.numberOfVertices; j++)
             {
