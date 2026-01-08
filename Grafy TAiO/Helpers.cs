@@ -253,11 +253,11 @@ namespace Grafy_TAiO
 
             if (numberOfVertices > compareBase.numberOfVertices)
             {
-                sb.AppendLine($"{numberOfVertices} vertices ({compareBase.numberOfVertices} base + {numberOfVertices - compareBase.numberOfVertices} added)");
+                sb.AppendLine($"There are {numberOfVertices} vertices ({compareBase.numberOfVertices} base + {numberOfVertices - compareBase.numberOfVertices} added)");
             }
             else
             {
-                sb.AppendLine($"{numberOfVertices} vertices (none added)");
+                sb.AppendLine($"There are {numberOfVertices} vertices (none added)");
             }
 
             int maxEdges = 0;
@@ -351,6 +351,7 @@ namespace Grafy_TAiO
 
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine("Mappings of vertices H -> G are:");
             sb.Append("H:");
             for (int i = 0; i < subgraph.numberOfVertices; i++)
                 sb.Append($" {i}");
@@ -392,6 +393,9 @@ namespace Grafy_TAiO
 
                 maxLengthG[j] = maxEdges.ToString().Length;
             }
+
+            sb.AppendLine("Adjacency matrix relative to the extended G:");
+            sb.AppendLine("'-' means no edges; 'a/b' means 'a' edges are present out of a total 'b'");
 
             int ti = 0;
             for (int i = 0; i < numberOfVertices; i++)
