@@ -61,7 +61,7 @@
 #endif
 #if DEBUG
             bool approximate = false;
-            string source = @"C:\MY\PATH\TO\SRC";
+            string source = @"C:\Users\kegor\OneDrive\Рабочий стол\Kachanouski_Maksymiuk_Wronkowski\Examples\Odległość\test.txt";
             string? destination = null;
 #endif
 
