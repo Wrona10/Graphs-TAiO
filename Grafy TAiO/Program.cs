@@ -94,20 +94,23 @@
             {
                 using (StreamWriter sw = new StreamWriter(destination))
                 {
-                    sw.WriteLine("Given graph G:");
+                    sw.WriteLine("Graphs are displayed as adjacency matrixes preceded by a number of vertices.");
+                    sw.WriteLine("'m[i][j] = x' means there are 'x' edges between vertex 'i' and vertex 'j'");
+                    sw.WriteLine();
+                    sw.WriteLine("Given the graph G:");
                     sw.WriteLine(G.ToString());
-                    sw.WriteLine("Given graph H to find in G:");
+                    sw.WriteLine("Given the graph H to find in the extended G:");
                     sw.WriteLine(H.ToString());
                     sw.WriteLine();
-                    sw.WriteLine($"And given number of copies to find k is {k}");
+                    sw.WriteLine($"And given the number of copies to find k is {k}");
                     sw.WriteLine();
-                    sw.WriteLine($"Solution found with {edits} editions:");
+                    sw.WriteLine($"Solution (the extended G) found with {edits} editions:");
                     sw.Write(result.ToString());
                     sw.WriteLine();
-                    sw.WriteLine("The difference between the base graph and result is:");
+                    sw.WriteLine("The difference between the base graph G and the solution is:");
                     sw.Write(result.GetAdditions(G));
                     sw.WriteLine();
-                    sw.WriteLine("Selections for the subraph are as follows:");
+                    sw.WriteLine("Copies of H found in the extended G are as follows:");
                     for (int i = 0; i < k; i++)
                     {
                         sw.WriteLine();
@@ -117,24 +120,28 @@
             }
             else
             {
-                Console.WriteLine("Given graph G:");
+                Console.WriteLine("Graphs are displayed as adjacency matrixes.");
+                Console.WriteLine("'m[i][j] = x' means there are 'x' edges between vertex 'i' and vertex 'j'");
+                Console.WriteLine();
+                
+                Console.WriteLine("Given the graph G:");
                 Console.WriteLine(G.ToString());
 
-                Console.WriteLine("Given graph H to find in G:");
+                Console.WriteLine("Given the graph H to find in the extended G:");
                 Console.WriteLine(H.ToString());
 
-                Console.WriteLine($"Given number of copies to find k is {k}");
+                Console.WriteLine($"And given the number of copies to find k is {k}");
                 Console.WriteLine();
 
-                Console.WriteLine($"Solution found with {edits} editions:");
+                Console.WriteLine($"Solution (the extended G) found with {edits} editions:");
                 Console.Write(result.ToString());
                 Console.WriteLine();
 
-                Console.WriteLine("The difference between the base graph and result is:");
+                Console.WriteLine("The difference between the base graph G and the solution is:");
                 Console.Write(result.GetAdditions(G));
                 Console.WriteLine();
 
-                Console.WriteLine("Selections for the subgraph are as follows:");
+                Console.WriteLine("Copies of H found in the extended G are as follows:");
                 for (int i = 0; i < k; i++)
                 {
                     Console.WriteLine();
